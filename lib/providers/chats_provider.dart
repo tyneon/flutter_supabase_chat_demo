@@ -31,12 +31,12 @@ Future<List<Chat>> chats(ChatsRef ref) async {
   if (ids.hasValue) {
     final chats = <Chat>[];
     for (final id in ids.value ?? []) {
-      final chatData = ((await Supabase.instance.client
-              .from('usersChats')
-              .select()
-              .eq('chatId', id)
-              .neq('userId', userId)) as List<Map<String, dynamic>>)
-          .first;
+      final data = await Supabase.instance.client
+          .from('usersChats')
+          .select()
+          .eq('chatId', id)
+          .neq('userId', userId);
+      final chatData = data.first;
       chats.add(Chat(
         id: id,
         otherUserId: chatData['userId'],
@@ -53,9 +53,9 @@ Future<Chat> createChat(
   int userId,
   int otherUserId,
 ) async {
-  final chatId = await Supabase.instance.client
-      .from('chats')
-      .insert({}).select('id') as int;
+  final data =
+      await Supabase.instance.client.from('chats').insert({}).select('id');
+  final int chatId = data.first['id'];
   await Supabase.instance.client.from('usersChats').insert([
     {
       'userId': userId,
@@ -66,5 +66,6 @@ Future<Chat> createChat(
       'chatId': chatId,
     }
   ]);
+
   return Chat(id: chatId, otherUserId: otherUserId);
 }

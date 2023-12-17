@@ -22,12 +22,15 @@ Stream<ChatUser> userData(UserDataRef ref) {
 Future<ChatUser> chatUserById(ChatUserByIdRef ref, int id) async {
   final data =
       await Supabase.instance.client.from('users').select().eq('id', id);
-  return ChatUser.fromJson((data as List<Map<String, dynamic>>).first);
+  return ChatUser.fromJson(data.first);
 }
 
 @riverpod
 Future<List<ChatUser>> allUsers(AllUsersRef ref) async {
   final data = await Supabase.instance.client.from('users').select();
-  if (data.isEmpty) return <ChatUser>[];
-  return data.map((item) => ChatUser.fromJson(item)).toList();
+  List<ChatUser> value = [];
+  for (final item in data) {
+    value.add(ChatUser.fromJson(item));
+  }
+  return value;
 }

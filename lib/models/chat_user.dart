@@ -10,7 +10,6 @@ class ChatUser with _$ChatUser {
     required int id,
     required String name,
     required String email,
-    required List<int> chatIds,
     // required String avatarUrl, // TODO
   }) = _ChatUser;
   factory ChatUser.fromJson(Map<String, dynamic> json) =>

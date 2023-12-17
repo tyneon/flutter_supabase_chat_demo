@@ -12,7 +12,7 @@ Stream<List<Message>> chatMessages(
 ) {
   final snapshots = Supabase.instance.client
       .from('messages')
-      .stream(primaryKey: ['id']).eq('chat_id', chatId);
+      .stream(primaryKey: ['id']).eq('chatId', chatId);
 
   return snapshots.map((snapshot) {
     final messages = <Message>[];

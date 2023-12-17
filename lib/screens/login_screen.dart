@@ -12,6 +12,9 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final form = GlobalKey<FormState>();
+  String name = "";
+  String email = "";
+  String password = "";
   bool createAccount = false;
 
   void submitForm() {
@@ -19,8 +22,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
     form.currentState!.save();
-    // TODO
-    ref.read(authProvider.notifier).login();
+    if (createAccount) {
+      ref.read(authProvider.notifier).signUp(email, password, name);
+    } else {
+      ref.read(authProvider.notifier).login(email, password);
+    }
   }
 
   @override
@@ -36,26 +42,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             children: [
               if (createAccount)
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: "Your name",
                   ),
+                  validator: (value) {
+                    if (value == null || value == "") {
+                      return "Password too short";
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) {
+                    name = newValue!;
+                  },
                 ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "E-mail",
                 ),
+                validator: (value) {
+                  if (value == null || value == "") {
+                    return "Password too short";
+                  }
+                  return null;
+                },
+                onSaved: (newValue) {
+                  email = newValue!;
+                },
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Password",
                 ),
+                validator: (value) {
+                  if (value == null || value.length < 6) {
+                    return "Password too short";
+                  }
+                  return null;
+                },
+                onSaved: (newValue) {
+                  password = newValue!;
+                },
               ),
-              if (createAccount)
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Repeat password",
-                  ),
-                ),
               const SizedBox(height: 20),
               FilledButton(
                 onPressed: submitForm,

@@ -80,16 +80,23 @@ class ChatUsersList extends ConsumerWidget {
                   Navigator.of(context).pop();
                   ref
                       .watch(createChatProvider(
-                    auth,
-                    user.id,
-                  ))
-                      .whenData((chat) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ChatScreen(chat),
-                      ),
-                    );
-                  });
+                        auth,
+                        user.id,
+                      ))
+                      .when(
+                        data: (chat) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(chat),
+                            ),
+                          );
+                        },
+                        loading: () {},
+                        error: (error, stackTrace) {
+                          print(error);
+                          print(stackTrace);
+                        },
+                      );
                 },
               ))
           .toList(),

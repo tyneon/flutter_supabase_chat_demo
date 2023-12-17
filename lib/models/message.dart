@@ -29,6 +29,7 @@ class Message with _$Message {
     required String text,
   }) =>
       {
+        'chatId': chatId,
         'senderId': senderId,
         'text': text,
       };
