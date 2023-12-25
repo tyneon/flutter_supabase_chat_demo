@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:supabase_chat/app_theme.dart';
 import 'package:supabase_chat/supabase_config.dart' as supabase;
@@ -14,6 +16,12 @@ void main() async {
     url: supabase.projectUrl,
     anonKey: supabase.anonKey,
   );
+  await Firebase.initializeApp();
+  await Permission.notification.isDenied.then((isDenied) {
+    if (isDenied) {
+      Permission.notification.request();
+    }
+  });
   runApp(const ProviderScope(child: MainApp()));
 }
 

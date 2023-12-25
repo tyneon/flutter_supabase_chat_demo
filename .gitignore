@@ -9,6 +9,8 @@
 .history
 .svn/
 migrate_working_dir/
+.vscode
+.diff
 
 # IntelliJ related
 *.iml
@@ -46,7 +48,12 @@ app.*.map.json
 *.g.dart
 *.freezed.dart
 
+# Node JS
+node_modules
+
 # Supabase & Firebase
 /lib/supabase_config.dart
-/node_modules/
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/ios/firebase_app_id_file.json
 ktp-flutter-chat-demo-firebase-adminsdk-*.json

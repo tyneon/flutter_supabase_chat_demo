@@ -1,5 +1,8 @@
 {
   "devDependencies": {
-    "supabase": "^1.123.0"
+    "supabase": "^1.123.4"
+  },
+  "dependencies": {
+    "google-auth-library": "^9.4.1"
   }
 }
