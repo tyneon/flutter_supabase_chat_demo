@@ -57,3 +57,4 @@ node_modules
 /ios/Runner/GoogleService-Info.plist
 /ios/firebase_app_id_file.json
 ktp-flutter-chat-demo-firebase-adminsdk-*.json
+/supabase/functions

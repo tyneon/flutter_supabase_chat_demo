@@ -12,7 +12,9 @@ class Message with _$Message {
     required int senderId,
     required int chatId,
     required DateTime timestamp,
+    required String type,
     required String text,
+    required String? mediaPath,
   }) = _Message;
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
@@ -20,10 +22,12 @@ class Message with _$Message {
         senderId: json['senderId'],
         chatId: json['chatId'],
         timestamp: DateTime.parse(json['timestamp'] as String),
-        text: json['text'],
+        type: json['type'],
+        text: json['text'] ?? '',
+        mediaPath: json['mediaPath'],
       );
 
-  static Map<String, dynamic> newMessageToJson({
+  static Map<String, dynamic> newTextMessageToJson({
     required int senderId,
     required int chatId,
     required String text,
@@ -32,6 +36,18 @@ class Message with _$Message {
         'chatId': chatId,
         'senderId': senderId,
         'text': text,
+      };
+
+  static Map<String, dynamic> newImageMessageToJson({
+    required int senderId,
+    required int chatId,
+    required String imagePath,
+  }) =>
+      {
+        'chatId': chatId,
+        'senderId': senderId,
+        'type': 'image',
+        'mediaPath': imagePath,
       };
 
   DateTime get groupDateTime {

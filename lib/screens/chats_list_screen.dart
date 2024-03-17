@@ -60,17 +60,21 @@ class ChatUsersList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authAsyncValue = ref.watch(authProvider);
     final usersAsyncValue = ref.watch(allUsersProvider);
-    final auth = ref.watch(authProvider);
-    if (auth == null) {
-      throw Exception("Not authenticated");
+    if (authAsyncValue.hasError) {
+      return Text('ERROR: ${authAsyncValue.error}');
     }
     if (usersAsyncValue.hasError) {
       return Text('ERROR: ${usersAsyncValue.error}');
     }
-    if (usersAsyncValue.isLoading) {
+    if (authAsyncValue.isLoading || usersAsyncValue.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
+    if (authAsyncValue.value == null) {
+      throw Exception("Not authenticated");
+    }
+    final auth = authAsyncValue.value!;
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 10),
       children: usersAsyncValue.value!

@@ -30,10 +30,14 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoggedIn = ref.watch(authProvider) != null;
+    final authAsyncValue = ref.watch(authProvider);
     return MaterialApp(
       theme: appTheme,
-      home: isLoggedIn ? const ChatsListScreen() : const LoginScreen(),
+      home: authAsyncValue.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : authAsyncValue.value != null
+              ? const ChatsListScreen()
+              : const LoginScreen(),
     );
   }
 }

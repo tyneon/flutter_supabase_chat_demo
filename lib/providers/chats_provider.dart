@@ -10,10 +10,11 @@ part 'chats_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Stream<List<int>> chatIds(ChatIdsRef ref) {
-  final userId = ref.watch(authProvider);
-  if (userId == null) {
+  final authAsyncValue = ref.watch(authProvider);
+  if (authAsyncValue.hasError || authAsyncValue.value == null) {
     throw Exception("Not authenticated");
   }
+  final userId = authAsyncValue.value!;
   final snapshots = Supabase.instance.client
       .from('usersChats')
       .stream(primaryKey: ['id']).eq('userId', userId);
@@ -23,10 +24,11 @@ Stream<List<int>> chatIds(ChatIdsRef ref) {
 
 @Riverpod(keepAlive: true)
 Future<List<Chat>> chats(ChatsRef ref) async {
-  final userId = ref.watch(authProvider);
-  if (userId == null) {
+  final authAsyncValue = ref.watch(authProvider);
+  if (authAsyncValue.hasError || authAsyncValue.value == null) {
     throw Exception("Not authenticated");
   }
+  final userId = authAsyncValue.value!;
   final ids = ref.watch(chatIdsProvider);
   if (ids.hasValue) {
     final chats = <Chat>[];

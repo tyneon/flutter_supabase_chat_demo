@@ -13,7 +13,11 @@ class MessagesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authProvider);
+    final authAsyncValue = ref.watch(authProvider);
+    if (authAsyncValue.hasError || authAsyncValue.value == null) {
+      throw Exception("Not authenticated");
+    }
+    final auth = authAsyncValue.value!;
     final messages = ref.watch(chatMessagesProvider(chatId));
     if (!messages.hasValue ||
         messages.value == null ||

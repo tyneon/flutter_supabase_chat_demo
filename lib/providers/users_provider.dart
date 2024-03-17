@@ -8,10 +8,11 @@ part 'users_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Stream<ChatUser> userData(UserDataRef ref) {
-  final userId = ref.watch(authProvider);
-  if (userId == null) {
+  final authAsyncValue = ref.watch(authProvider);
+  if (authAsyncValue.hasError || authAsyncValue.value == null) {
     throw Exception("Not authenticated");
   }
+  final userId = authAsyncValue.value!;
   final snapshots = Supabase.instance.client
       .from('users')
       .stream(primaryKey: ['id']).eq('id', userId);

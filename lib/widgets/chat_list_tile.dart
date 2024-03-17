@@ -18,32 +18,62 @@ class ChatListTile extends ConsumerWidget {
         ref.watch(chatUserByIdProvider(chat.otherUserId));
     final name = otherChatUserAsyncData.value?.name ?? "Loading";
     final topMessage = topMessageAsyncValue.value?.lastOrNull;
+    late Widget topMessagePreview;
+    if (topMessage == null) {
+      topMessagePreview = const SizedBox();
+    } else {
+      switch (topMessage.type) {
+        case "text":
+          {
+            topMessagePreview = Text(
+              topMessage.text,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            );
+            break;
+          }
+        case "image":
+          {
+            topMessagePreview = const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.image_outlined,
+                  size: 15,
+                ),
+                Text(
+                  "Image",
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            );
+            break;
+          }
+        default:
+          topMessagePreview = const Text("...");
+      }
+    }
     return ListTile(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ChatScreen(chat),
-          ),
-        );
-      },
-      leading: UserAvatar(name),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(name),
-          Text(
-            topMessage?.timestampString ?? "",
-            style: const TextStyle(fontSize: 12),
-          ),
-        ],
-      ),
-      subtitle: Text(
-        otherChatUserAsyncData.isLoading
-            ? "..."
-            : topMessage?.text ?? "No messages",
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(chat),
+            ),
+          );
+        },
+        leading: UserAvatar(name),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(name),
+            Text(
+              topMessage?.timestampString ?? "",
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        subtitle: topMessagePreview);
   }
 }
