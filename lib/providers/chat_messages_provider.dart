@@ -43,10 +43,13 @@ Future<File> chatVideoFile(
   ChatVideoFileRef ref,
   String mediaPath,
 ) async {
-  final videoBytes =
-      await Supabase.instance.client.storage.from('media').download(mediaPath);
   final directory = await getApplicationDocumentsDirectory();
   final videoFile = File('${directory.path}/$mediaPath');
+  if (await videoFile.exists()) {
+    return videoFile;
+  }
+  final videoBytes =
+      await Supabase.instance.client.storage.from('media').download(mediaPath);
   try {
     videoFile.createSync(recursive: true);
     return await videoFile.writeAsBytes(videoBytes.toList());

@@ -99,6 +99,7 @@ class _VideoMessageDialogState extends State<VideoMessageDialog> {
 
     try {
       recordedVideo = File((await cameraController.stopVideoRecording()).path);
+      disposeCamera();
       initVideoPlayer();
       if (mounted) {
         setState(() {
@@ -138,6 +139,8 @@ class _VideoMessageDialogState extends State<VideoMessageDialog> {
     if (mounted) {
       setState(() {
         recordedVideo = null;
+        disposeVideoPlayer();
+        initCamera();
       });
     }
   }

@@ -53,6 +53,7 @@ class Message with _$Message {
         'chatId': chatId,
         'senderId': senderId,
         'text': text,
+        'type': MessageType.text.name,
       };
 
   static Map<String, dynamic> newImageMessageToJson({
@@ -63,7 +64,7 @@ class Message with _$Message {
       {
         'chatId': chatId,
         'senderId': senderId,
-        'type': 'image',
+        'type': MessageType.image.name,
         'mediaPath': imagePath,
       };
 
@@ -75,7 +76,7 @@ class Message with _$Message {
       {
         'chatId': chatId,
         'senderId': senderId,
-        'type': 'video',
+        'type': MessageType.video.name,
         'mediaPath': videoPath,
       };
 

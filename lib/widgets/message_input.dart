@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:supabase_chat/providers/auth_provider.dart';
 import 'package:supabase_chat/providers/chat_messages_provider.dart';
-import 'package:supabase_chat/models/chat.dart';
 import 'package:supabase_chat/widgets/video_message_dialog.dart';
 
 class MessageInput extends ConsumerStatefulWidget {
@@ -72,7 +70,7 @@ class _MessageInputState extends ConsumerState<MessageInput> {
 
   void pickImage(ImageSource imageSource) async {
     final imagePicker = ImagePicker();
-    final image = await imagePicker.pickImage(source: imageSource!);
+    final image = await imagePicker.pickImage(source: imageSource);
 
     if (image == null) {
       return;
