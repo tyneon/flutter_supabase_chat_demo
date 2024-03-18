@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:supabase_chat/models/message.dart';
@@ -37,6 +38,24 @@ Future<Uint8List> chatMediaMemoryData(
   return file;
 }
 
+@riverpod
+Future<File> chatVideoFile(
+  ChatVideoFileRef ref,
+  String mediaPath,
+) async {
+  final videoBytes =
+      await Supabase.instance.client.storage.from('media').download(mediaPath);
+  final directory = await getApplicationDocumentsDirectory();
+  final videoFile = File('${directory.path}/$mediaPath');
+  try {
+    videoFile.createSync(recursive: true);
+    return await videoFile.writeAsBytes(videoBytes.toList());
+  } catch (e) {
+    print(e);
+    rethrow;
+  }
+}
+
 Future<void> sendMessage(int chatId, int senderId, String text) async {
   await Supabase.instance.client.from('messages').insert(
         Message.newTextMessageToJson(
@@ -59,6 +78,22 @@ Future<void> sendImageMessage(int chatId, int senderId, File imageFile) async {
           chatId: chatId,
           senderId: senderId,
           imagePath: mediaPath,
+        ),
+      );
+}
+
+Future<void> sendVideoMessage(int chatId, int senderId, File videoFile) async {
+  final mediaPath =
+      '$chatId/${DateTime.now().microsecondsSinceEpoch.toString()}${path.extension(videoFile.path)}';
+  await Supabase.instance.client.storage.from('media').upload(
+        mediaPath,
+        videoFile,
+      );
+  await Supabase.instance.client.from('messages').insert(
+        Message.newVideoMessageToJson(
+          chatId: chatId,
+          senderId: senderId,
+          videoPath: mediaPath,
         ),
       );
 }

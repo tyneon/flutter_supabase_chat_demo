@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:supabase_chat/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_chat/providers/auth_provider.dart';
 import 'package:supabase_chat/providers/chat_messages_provider.dart';
 import 'package:supabase_chat/models/chat.dart';
+import 'package:supabase_chat/widgets/video_message_dialog.dart';
 
 class MessageInput extends ConsumerStatefulWidget {
   final int chatId;
@@ -151,7 +151,12 @@ class _MessageInputState extends ConsumerState<MessageInput> {
           ),
           if (!doSend)
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => VideoMessageDialog(widget.chatId, auth),
+                );
+              },
               icon: const Icon(Icons.photo_camera_outlined),
               color: colorScheme.secondary,
             ),

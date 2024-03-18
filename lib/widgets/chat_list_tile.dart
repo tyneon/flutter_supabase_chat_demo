@@ -1,3 +1,4 @@
+import 'package:supabase_chat/models/message.dart';
 import 'package:supabase_chat/providers/chat_messages_provider.dart';
 import 'package:supabase_chat/providers/users_provider.dart';
 import 'package:flutter/material.dart';
@@ -23,16 +24,7 @@ class ChatListTile extends ConsumerWidget {
       topMessagePreview = const SizedBox();
     } else {
       switch (topMessage.type) {
-        case "text":
-          {
-            topMessagePreview = Text(
-              topMessage.text,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            );
-            break;
-          }
-        case "image":
+        case MessageType.image:
           {
             topMessagePreview = const Row(
               mainAxisSize: MainAxisSize.min,
@@ -51,8 +43,31 @@ class ChatListTile extends ConsumerWidget {
             );
             break;
           }
+        case MessageType.video:
+          {
+            topMessagePreview = const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.video_camera_back_outlined,
+                  size: 15,
+                ),
+                Text(
+                  "Video",
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            );
+            break;
+          }
         default:
-          topMessagePreview = const Text("...");
+          topMessagePreview = Text(
+            topMessage.text,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          );
       }
     }
     return ListTile(

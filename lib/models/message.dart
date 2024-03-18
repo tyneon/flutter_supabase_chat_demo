@@ -4,6 +4,23 @@ import 'package:intl/intl.dart';
 part 'message.freezed.dart';
 part 'message.g.dart';
 
+enum MessageType {
+  text,
+  image,
+  video,
+}
+
+MessageType _stringToMessageType(String type) {
+  switch (type) {
+    case 'image':
+      return MessageType.image;
+    case 'video':
+      return MessageType.video;
+    default:
+      return MessageType.text;
+  }
+}
+
 @freezed
 class Message with _$Message {
   const Message._();
@@ -12,7 +29,7 @@ class Message with _$Message {
     required int senderId,
     required int chatId,
     required DateTime timestamp,
-    required String type,
+    required MessageType type,
     required String text,
     required String? mediaPath,
   }) = _Message;
@@ -22,7 +39,7 @@ class Message with _$Message {
         senderId: json['senderId'],
         chatId: json['chatId'],
         timestamp: DateTime.parse(json['timestamp'] as String),
-        type: json['type'],
+        type: _stringToMessageType(json['type']),
         text: json['text'] ?? '',
         mediaPath: json['mediaPath'],
       );
@@ -48,6 +65,18 @@ class Message with _$Message {
         'senderId': senderId,
         'type': 'image',
         'mediaPath': imagePath,
+      };
+
+  static Map<String, dynamic> newVideoMessageToJson({
+    required int senderId,
+    required int chatId,
+    required String videoPath,
+  }) =>
+      {
+        'chatId': chatId,
+        'senderId': senderId,
+        'type': 'video',
+        'mediaPath': videoPath,
       };
 
   DateTime get groupDateTime {

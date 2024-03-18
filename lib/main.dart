@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:supabase_chat/app_theme.dart';
+import 'package:supabase_chat/cameras.dart';
 import 'package:supabase_chat/supabase_config.dart' as supabase;
 import 'package:supabase_chat/providers/auth_provider.dart';
 import 'package:supabase_chat/screens/chats_list_screen.dart';
@@ -22,6 +23,7 @@ void main() async {
       Permission.notification.request();
     }
   });
+  await Cameras.init();
   runApp(const ProviderScope(child: MainApp()));
 }
 
